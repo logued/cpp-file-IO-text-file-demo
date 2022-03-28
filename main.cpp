@@ -1,15 +1,15 @@
-// FileIO-Text.cpp                          March 2022
+// File-IO-text-file.cpp                          March 2022
+//
 // Basic Text File IO - write and read
 // Demonstrates:
 //    Writing to a text file using an output file stream (ofstream)
 //    Reading from a text file line-by-line, input file stream (ifstream)
-//    Parsing a comma delimited line of text using a stringstream
+//    Parsing a comma-delimited line of text using a stringstream object
 //    Using <string> functions:  getline(), stoi() and stod()
 
 // Note that the file "students.txt" will have to be copied into
-// the folder:  cmake-build-debug as that is the default location where
-// it will search for files.
-
+// the folder:  "cmake-build-debug" as that is the default location where
+// CLion it will search for files.
 
 #include <iostream>
 #include <fstream>      // file stream
@@ -44,9 +44,9 @@ void DemoOutputFileStream()
 * Parse a comma-delimited string and output each field.
 * We know the string format is: "name,age,height"
 */
-void parseLine(const string& str) {
+void parseLine(const string& strLine) {
 
-    stringstream strStream( str ); //create a string-stream from the string
+    stringstream strStream( strLine ); //create a string-stream from the string
 
     string name;
     getline(strStream, name, ','); // get first string - which we expect to be the name
@@ -56,12 +56,12 @@ void parseLine(const string& str) {
 
     try
     {
-        string str;
-        getline(strStream, str, ',');  // read next field as a string
-        age = stoi(str); // string to int conversion (throws exceptions)
+        string strTemp;
+        getline(strStream, strTemp, ',');  // read next field (age) as a string
+        age = stoi(strTemp);    // sconvert tring to int conversion (may throw exceptions)
         
-        getline(strStream, str, ',');
-        height = stod(str); // string to double (throws exceptions)
+        getline(strStream, strTemp, ',');   // extract the height as a string
+        height = stod(strTemp); // convert string to double (may throw exceptions)
     }
     catch (std::invalid_argument const& e)
     {
@@ -71,7 +71,6 @@ void parseLine(const string& str) {
     {
         cout << "Integer overflow: std::out_of_range thrown" << '\n';
     }
-
     cout << "Name: " << name << " age: " << age << " height: " << height << endl;
 }
 
