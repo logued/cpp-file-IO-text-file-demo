@@ -3,13 +3,15 @@
 // Basic Text File IO - write and read
 // Demonstrates:
 //    Writing to a text file using an output file stream (ofstream)
-//    Reading from a text file line-by-line, input file stream (ifstream)
-//    Parsing a comma-delimited line of text using a stringstream object
+//
+//    Reading from a text file line-by-line, input file stream (ifstream) and
+//    parsing the comma-delimited line of text using a stringstream object.
+//
 //    Using <string> functions:  getline(), stoi() and stod()
 
-// Note that the sample data file "students.txt" is in the project folder.
+// Note that the data file "students.txt" is in the project folder.
 // You will have to set this folder to be the "Working Directory" so that CLion can find it.
-// Set the Working Directory by selecting: // Run>Edit Configurations, and set
+// Set the Working Directory by selecting:  Run > Edit Configurations, and then, in the edit box, set
 // "Working Directory" to be the project folder (click on the small folder icon in the edit label)
 
 #include <iostream>
@@ -18,6 +20,18 @@
 #include <sstream>      // string stream
 
 using namespace std;
+
+// function prototypes
+void DemoOutputFileStream();
+void parseLine(const string& strLine);
+void DemoInputFileStream();
+
+
+int main() {
+    DemoOutputFileStream();
+    DemoInputFileStream(); // read and parse lines
+    return 0;
+}
 
 void DemoOutputFileStream() 
 {
@@ -41,45 +55,6 @@ void DemoOutputFileStream()
         cout << "Unable to open file";
 }
 
-/* 
-* Parse a comma-delimited string and output each field.
-* We know the string format is: "name,age,height"
-*/
-void parseLine(const string& strLine) {
-
-    // turn the line of text into a stringstream for tokenizing
-    stringstream strStream( strLine );
-
-    // set the delimeter character that is used in teh file (i.e. what separates the tokens in the string)
-    // This could be a semicolon, or any character that we choose
-    const  char DELIMETER = ',';
-    string name;
-    // extract the first token (the name) into the name variable
-    // - a comma delimits the strings  -
-    getline(strStream, name, DELIMETER);
-
-    int age = 0;
-    double height = 0.0;
-
-    try
-    {
-        string strTemp;
-        getline(strStream, strTemp, DELIMETER);  // read next field (age) as a string
-        age = stoi(strTemp);    // convert string to int conversion (may throw exceptions)
-        
-        getline(strStream, strTemp, DELIMETER);   // extract the height as a string
-        height = stod(strTemp); // convert string to double (may throw exceptions)
-    }
-    catch (std::invalid_argument const& e)
-    {
-        cout << "Bad input: std::invalid_argument thrown" << '\n';
-    }
-    catch (std::out_of_range const& e)
-    {
-        cout << "Integer overflow: std::out_of_range thrown" << '\n';
-    }
-    cout << "Name: " << name << " age: " << age << " height: " << height << endl;
-}
 
 /*
 * Open text file as an input file stream (ifstream)
@@ -89,7 +64,7 @@ void parseLine(const string& strLine) {
 void DemoInputFileStream() {
     cout << "Attempting to read from a comma-delimited text file." << endl;
 
-    ifstream inFileStream("students.txt"); // open file as input file stream
+    ifstream inFileStream("students.txt"); // open file as input file stream (from working directory)
 
     if ( inFileStream.good() )  // if file opened successfully, and not empty
     {
@@ -105,8 +80,45 @@ void DemoInputFileStream() {
         cout << "Unable to open file, or file is empty.";
 }
 
-int main() {
-    DemoOutputFileStream();
-    DemoInputFileStream(); // read and parse lines 
-    return 0;
+/**
+ * Parse a comma-delimited string and output each field.
+ * We know the string format is: "name,age,height"
+ *
+ * @param strLine - a string that has commas as delimiters
+ */
+
+void parseLine(const string& strLine) {
+
+    // turn the line of text into a stringstream for tokenizing
+    stringstream strStream( strLine );
+
+    // set the delimiter character that is used in teh file (i.e. what separates the tokens in the string)
+    // This could be a semicolon, or any character that we choose
+    const  char DELIMITER = ',';
+    string name;
+    // extract the first token (the name) into the name variable
+    // - a comma delimits the strings  -
+    getline(strStream, name, DELIMITER);
+
+    int age = 0;
+    double height = 0.0;
+
+    try
+    {
+        string strTemp;
+        getline(strStream, strTemp, DELIMITER);  // read next field (age) as a string
+        age = stoi(strTemp);    // convert string to int conversion (may throw exceptions)
+
+        getline(strStream, strTemp, DELIMITER);   // extract the height as a string
+        height = stod(strTemp); // convert string to double (may throw exceptions)
+    }
+    catch (std::invalid_argument const& e)
+    {
+        cout << "Bad input: std::invalid_argument thrown" << '\n';
+    }
+    catch (std::out_of_range const& e)
+    {
+        cout << "Integer overflow: std::out_of_range thrown" << '\n';
+    }
+    cout << "Name: " << name << " age: " << age << " height: " << height << endl;
 }
