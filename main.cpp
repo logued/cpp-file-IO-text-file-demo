@@ -1,4 +1,4 @@
-// File-IO-text-file.cpp                          March 2022
+// File-IO-text-file.cpp                 2024
 //
 // Basic Text File IO - write and read
 // Demonstrates:
@@ -7,9 +7,10 @@
 //    Parsing a comma-delimited line of text using a stringstream object
 //    Using <string> functions:  getline(), stoi() and stod()
 
-// Note that the file "students.txt" will have to be copied into
-// the folder:  "cmake-build-debug" as that is the default location where
-// CLion it will search for files.
+// Note that the sample data file "students.txt" is in the project folder.
+// You will have to set this folder to be the "Working Directory" so that CLion can find it.
+// Set the Working Directory by selecting: // Run>Edit Configurations, and set
+// "Working Directory" to be the project folder (click on the small folder icon in the edit label)
 
 #include <iostream>
 #include <fstream>      // file stream
@@ -46,10 +47,16 @@ void DemoOutputFileStream()
 */
 void parseLine(const string& strLine) {
 
-    stringstream strStream( strLine ); //create a string-stream from the string
+    // turn the line of text into a stringstream for tokenizing
+    stringstream strStream( strLine );
 
+    // set the delimeter character that is used in teh file (i.e. what separates the tokens in the string)
+    // This could be a semicolon, or any character that we choose
+    const  char DELIMETER = ',';
     string name;
-    getline(strStream, name, ','); // get first string - which we expect to be the name
+    // extract the first token (the name) into the name variable
+    // - a comma delimits the strings  -
+    getline(strStream, name, DELIMETER);
 
     int age = 0;
     double height = 0.0;
@@ -57,10 +64,10 @@ void parseLine(const string& strLine) {
     try
     {
         string strTemp;
-        getline(strStream, strTemp, ',');  // read next field (age) as a string
-        age = stoi(strTemp);    // sconvert tring to int conversion (may throw exceptions)
+        getline(strStream, strTemp, DELIMETER);  // read next field (age) as a string
+        age = stoi(strTemp);    // convert string to int conversion (may throw exceptions)
         
-        getline(strStream, strTemp, ',');   // extract the height as a string
+        getline(strStream, strTemp, DELIMETER);   // extract the height as a string
         height = stod(strTemp); // convert string to double (may throw exceptions)
     }
     catch (std::invalid_argument const& e)
